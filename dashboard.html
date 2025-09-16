@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tech Debate Dashboard</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* Reset */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Montserrat', sans-serif;
+      background: #0a0a14;
+      color: #fff;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    nav.navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #121621;
+      padding: 1rem 3rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    nav .logo {
+      font-weight: 900;
+      font-size: 1.6rem;
+      color: #e03c3c;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    nav .nav-buttons {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav button {
+      background: transparent;
+      border: 2px solid #e03c3c;
+      color: #e03c3c;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.45rem 1.3rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    nav button:hover {
+      background: #e03c3c;
+      color: #fff;
+    }
+
+    /* Main Dashboard */
+    main.dashboard {
+      display: flex;
+      flex-direction: column; /* Portrait layout (scroll down) */
+      gap: 3rem;
+      padding: 3rem 6%;
+      background: linear-gradient(135deg, #0a0a14 30%, #1a1a2e 80%);
+    }
+
+    section {
+      background: #121621;
+      border-radius: 14px;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 10px 30px rgba(224, 60, 60, 0.7);
+      width: 100%;
+      max-width: 900px; /* Keep content readable on wide screens */
+      margin: 0 auto;
+    }
+
+    /* Hero Section */
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: #e03c3c;
+      margin-bottom: 0.4em;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .hero p, .hero strong {
+      font-size: 1.1rem;
+      line-height: 1.4;
+      opacity: 0.85;
+    }
+
+    .hero .desc {
+      margin-top: 1.3rem;
+      font-style: italic;
+      opacity: 0.75;
+    }
+
+    /* Registration */
+    .registration h2, .contact h2 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #e03c3c;
+      margin-bottom: 1.8rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.3rem;
+    }
+
+    input, select {
+      padding: 14px 18px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      outline-offset: 3px;
+      transition: background 0.3s ease;
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    input:focus, select:focus {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    button[type="submit"] {
+      background: #e03c3c;
+      color: #fff;
+      border: none;
+      font-weight: 700;
+      font-size: 1.15rem;
+      border-radius: 30px;
+      padding: 14px 0;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(224, 60, 60, 0.7);
+      transition: all 0.3s ease;
+    }
+    button[type="submit"]:hover {
+      background: #bf2f2f;
+      transform: scale(1.05);
+      box-shadow: 0 12px 32px rgba(191, 47, 47, 0.85);
+    }
+
+    #stanceField {
+      display: none;
+    }
+
+    #status {
+      margin-top: 1rem;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #ff4b4b;
+      min-height: 1.4em;
+    }
+
+    /* Contact Section */
+    .contact p {
+      font-size: 1rem;
+      opacity: 0.8;
+      margin: 0.6rem 0;
+    }
+    .contact a {
+      color: #e03c3c;
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      nav.navbar {
+        padding: 1rem 1.5rem;
+      }
+      nav .logo {
+        font-size: 1.3rem;
+      }
+      nav .nav-buttons {
+        gap: 1rem;
+      }
+    }
+  </style>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBIVdex7PLmKVu3DMGm39IsdeCVhqBfpmw",
+      authDomain: "techdebate-31985.firebaseapp.com",
+      projectId: "techdebate-31985",
+      storageBucket: "techdebate-31985.firebasestorage.app",
+      messagingSenderId: "942974738999",
+      appId: "1:942974738999:web:994175ac0fd52211ee55b2",
+      measurementId: "G-B12XTQQR39"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("debateForm");
+      const status = document.getElementById("status");
+      const roleSelect = form.role;
+      const stanceField = document.getElementById("stanceField");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const name = form.name.value.trim();
+        const role = roleSelect.value;
+        const stance = role === "participant" ? form.stance.value : "spectator";
+
+        if (!name || !role || (role === "participant" && !stance)) {
+          status.style.color = "#ff6b6b";
+          status.textContent = "⚠️ Please fill all fields.";
+          return;
+        }
+
+        try {
+          await addDoc(collection(db, "debate_registrations"), {
+            name,
+            role,
+            stance,
+            createdAt: serverTimestamp()
+          });
+
+          status.style.color = "#4CAF50";
+          status.textContent = "🎉 Registered successfully!";
+          form.reset();
+          stanceField.style.display = "none";
+        } catch (error) {
+          status.style.color = "red";
+          status.textContent = `Error: ${error.message}`;
+        }
+      });
+
+      roleSelect.addEventListener("change", () => {
+        stanceField.style.display = roleSelect.value === "participant" ? "block" : "none";
+      });
+    });
+  </script>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">GKSS</div>
+    <div class="nav-buttons">
+      <button type="button" onclick="window.location.href='index.html'">Home</button>
+      <button type="button" onclick="document.getElementById('contactSection').scrollIntoView({behavior:'smooth'})">Contact Us</button>
+    </div>
+  </nav>
+
+  <main class="dashboard">
+
+    <section class="hero">
+      <h1>Tech Debate 2025</h1>
+      <p><strong>Theme:</strong> The Future is AI, Humans are Just a Beta Version</p>
+      <p><strong>Date:</strong> September 27, 2025</p>
+      <p><strong>Location:</strong> Durban University of Technology</p>
+      <p class="desc">
+        Artificial Intelligence (AI) is transforming society across healthcare, education, business, and governance. The debate theme encourages reflection on whether AI enhances human potential or replaces it, raising technological, ethical, and philosophical questions. Participants are urged to prepare with evidence-based arguments for meaningful engagement.
+      </p>
+    </section>
+
+    <section class="registration">
+      <h2>Register Now</h2>
+      <form id="debateForm" novalidate>
+        <input type="text" name="name" placeholder="Enter your full name" required autocomplete="name" />
+        <select name="role" required>
+          <option value="">-- Register as --</option>
+          <option value="participant">Participant</option>
+          <option value="spectator">Spectator</option>
+        </select>
+        <div id="stanceField">
+          <select name="stance">
+            <option value="">-- Choose your stance --</option>
+            <option value="for">For the Notion</option>
+            <option value="against">Against the Notion</option>
+          </select>
+        </div>
+        <button type="submit">Register</button>
+      </form>
+      <p id="status"></p>
+    </section>
+
+    <section class="contact" id="contactSection">
+      <h2>Contact Us</h2>
+      <p>📧 Email: techdebate@dut.ac.za</p>
+      <p>📞 Phone: +27 123 456 789</p>
+      <p>🌐 Website: <a href="https://www.techdebate2025.co.za" target="_blank" rel="noopener noreferrer">www.techdebate2025.co.za</a></p>
+    </section>
+
+  </main>
+</body>
+</html>

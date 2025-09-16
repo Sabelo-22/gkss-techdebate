@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tech Debate Dashboard</title>
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Reset */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        font-family: "Montserrat", sans-serif;
+        background: #0a0a14;
+        color: #fff;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* Header Section */
+      .header-section {
+        text-align: center;
+        padding: 2rem 1rem;
+        background: linear-gradient(135deg, #0a0a14 30%, #1a1a2e 80%);
+      }
+
+      .highlight-red {
+        background-color: #e03c3c;
+        color: white;
+        display: inline-block;
+        padding: 0.5rem 1.5rem;
+        font-weight: 700;
+        font-size: 1.5rem;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .title {
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: #fff;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .subtitle {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #e03c3c;
+        margin-bottom: 1rem;
+        font-style: italic;
+      }
+
+      .date-location {
+        font-size: 1.1rem;
+        opacity: 0.85;
+        margin-bottom: 2rem;
+      }
+
+      /* Navbar */
+      nav.navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #121621;
+        padding: 1rem 3rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      }
+
+      nav .logo {
+        font-weight: 900;
+        font-size: 1.6rem;
+        color: #e03c3c;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      nav .nav-buttons {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      nav button {
+        background: transparent;
+        border: 2px solid #e03c3c;
+        color: #e03c3c;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 0.45rem 1.3rem;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      nav button:hover {
+        background: #e03c3c;
+        color: #fff;
+      }
+
+      /* Main Dashboard */
+      main.dashboard {
+        display: flex;
+        flex-direction: column; /* Portrait layout (scroll down) */
+        gap: 3rem;
+        padding: 3rem 6%;
+        background: linear-gradient(135deg, #0a0a14 30%, #1a1a2e 80%);
+      }
+
+      section {
+        background: #121621;
+        border-radius: 14px;
+        padding: 3rem 2.5rem;
+        box-shadow: 0 10px 30px rgba(224, 60, 60, 0.7);
+        width: 100%;
+        max-width: 900px; /* Keep content readable on wide screens */
+        margin: 0 auto;
+      }
+
+      /* Hero Section */
+      .hero h1 {
+        font-size: 2.8rem;
+        font-weight: 900;
+        color: #e03c3c;
+        margin-bottom: 0.4em;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .hero p,
+      .hero strong {
+        font-size: 1.1rem;
+        line-height: 1.4;
+        opacity: 0.85;
+      }
+
+      .hero .desc {
+        margin-top: 1.3rem;
+        font-style: italic;
+        opacity: 0.75;
+      }
+
+      /* Registration */
+      .registration h2,
+      .contact h2 {
+        font-size: 2.2rem;
+        font-weight: 900;
+        color: #e03c3c;
+        margin-bottom: 1.8rem;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.3rem;
+      }
+
+      input,
+      select {
+        padding: 14px 18px;
+        border-radius: 8px;
+        border: none;
+        font-size: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        outline-offset: 3px;
+        transition: background 0.3s ease;
+      }
+
+      input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      input:focus,
+      select:focus {
+        background: rgba(255, 255, 255, 0.22);
+      }
+
+      button[type="submit"] {
+        background: #e03c3c;
+        color: #fff;
+        border: none;
+        font-weight: 700;
+        font-size: 1.15rem;
+        border-radius: 30px;
+        padding: 14px 0;
+        cursor: pointer;
+        box-shadow: 0 8px 24px rgba(224, 60, 60, 0.7);
+        transition: all 0.3s ease;
+      }
+      button[type="submit"]:hover {
+        background: #bf2f2f;
+        transform: scale(1.05);
+        box-shadow: 0 12px 32px rgba(191, 47, 47, 0.85);
+      }
+
+      #stanceField {
+        display: none;
+      }
+
+      #status {
+        margin-top: 1rem;
+        font-weight: 700;
+        font-size: 1rem;
+        color: #ff4b4b;
+        min-height: 1.4em;
+      }
+
+      /* Contact Section */
+      .contact p {
+        font-size: 1rem;
+        opacity: 0.8;
+        margin: 0.6rem 0;
+      }
+      .contact a {
+        color: #e03c3c;
+        text-decoration: underline;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .header-section {
+          padding: 1.5rem 1rem;
+        }
+
+        .highlight-red {
+          font-size: 1.2rem;
+          padding: 0.4rem 1rem;
+        }
+
+        .title {
+          font-size: 2rem;
+        }
+
+        .subtitle {
+          font-size: 1.2rem;
+        }
+
+        .date-location {
+          font-size: 1rem;
+        }
+
+        nav.navbar {
+          padding: 1rem 1.5rem;
+        }
+        nav .logo {
+          font-size: 1.3rem;
+        }
+        nav .nav-buttons {
+          gap: 1rem;
+        }
+      }
+
+      /* Participation option and stance selection styles */
+      .participation-option,
+      .stance-selection {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 1.2rem;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+      }
+
+      .participation-option label,
+      .stance-selection label {
+        display: block;
+        margin-bottom: 0.8rem;
+        font-weight: 600;
+      }
+
+      .radio-group {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      .radio-group input[type="radio"] {
+        display: none;
+      }
+
+      .radio-group label {
+        display: inline-block;
+        padding: 0.6rem 1.2rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .radio-group input[type="radio"]:checked + label {
+        background: #e03c3c;
+        color: white;
+      }
+
+      #stanceSelection {
+        display: none;
+        animation: fadeIn 0.5s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Responsive adjustments for the new elements */
+      @media (max-width: 768px) {
+        .radio-group {
+          flex-direction: column;
+          gap: 0.8rem;
+        }
+
+        .radio-group label {
+          text-align: center;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .title {
+          font-size: 1.7rem;
+        }
+
+        .subtitle {
+          font-size: 1.1rem;
+        }
+
+        section {
+          padding: 2rem 1.5rem;
+        }
+
+        .hero h1 {
+          font-size: 2.2rem;
+        }
+      }
+      .admin-button {
+        background: linear-gradient(135deg, #e03c3c 0%, #bf2f2f 100%);
+        color: white;
+        border: none;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 0.6rem 1.5rem;
+        border-radius: 30px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(224, 60, 60, 0.5);
+        transition: all 0.3s ease;
+        margin-left: 1.5rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+
+      .admin-button:hover {
+        background: linear-gradient(135deg, #bf2f2f 0%, #9a2525 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(191, 47, 47, 0.6);
+      }
+
+      /* For mobile responsiveness */
+      @media (max-width: 768px) {
+        .admin-button {
+          margin-left: 0;
+          margin-top: 0.8rem;
+          width: 100%;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header-section">
+      <!-- <div class="highlight-red">GKSS KZN</div> -->
+      <button class="highlight-red" onclick="window.location.href='admin.html'">
+        GKSS KZN
+      </button>
+      <h2 class="title">Presents Tech Debate</h2>
+      <p class="subtitle">The future is AI, Humans are Just a Beta Version</p>
+      <p class="date-location">
+        October 4, 2025 • Durban University of Technology
+      </p>
+    </div>
+
+    <main class="dashboard">
+      <section class="hero">
+        <h1>Tech Debate 2025</h1>
+        <p>
+          <strong>Theme:</strong> The Future is AI, Humans are Just a Beta
+          Version
+        </p>
+        <p><strong>Date:</strong> September 27, 2025</p>
+        <p><strong>Location:</strong> Durban University of Technology</p>
+        <p class="desc">
+          Artificial Intelligence (AI) is transforming society across
+          healthcare, education, business, and governance. The debate theme
+          encourages reflection on whether AI enhances human potential or
+          replaces it, raising technological, ethical, and philosophical
+          questions. Participants are urged to prepare with evidence-based
+          arguments for meaningful engagement.
+        </p>
+      </section>
+
+      <section class="registration">
+        <h2>Register Now</h2>
+        <form id="registerForm" novalidate>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Full Name"
+            required
+          />
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Email"
+            required
+          />
+          <input
+            type="text"
+            id="institution"
+            name="institution"
+            placeholder="Institution"
+            required
+          />
+
+          <!-- Participation option -->
+          <div class="participation-option">
+            <label>Would you like to participate in the debate?</label>
+            <div class="radio-group">
+              <input
+                type="radio"
+                id="participateYes"
+                name="participate"
+                value="yes"
+              />
+              <label for="participateYes">Yes</label>
+              <input
+                type="radio"
+                id="participateNo"
+                name="participate"
+                value="no"
+                checked
+              />
+              <label for="participateNo">No</label>
+            </div>
+          </div>
+
+          <!-- Stance selection (initially hidden) -->
+          <div id="stanceSelection" class="stance-selection">
+            <label>Which side of the debate would you like to join?</label>
+            <div class="radio-group">
+              <input type="radio" id="stanceFor" name="stance" value="for" />
+              <label for="stanceFor">For the notion</label>
+              <input
+                type="radio"
+                id="stanceAgainst"
+                name="stance"
+                value="against"
+              />
+              <label for="stanceAgainst">Against the notion</label>
+            </div>
+          </div>
+
+          <button type="submit">Register</button>
+        </form>
+        <p id="status"></p>
+      </section>
+
+      <section class="contact" id="contactSection">
+        <h2>Contact Us</h2>
+        <p>📧 Email: geekulchastudentsocietykzn@gmail.com</p>
+        <p>📞 Phone: +27 71 224 9012</p>
+      </section>
+    </main>
+
+    <!-- Firebase App (core SDK) -->
+    <script type="module">
+      // Import the functions you need from the SDKs
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBIVdex7PLmKVu3DMGm39IsdeCVhqBfpmw",
+        authDomain: "techdebate-31985.firebaseapp.com",
+        projectId: "techdebate-31985",
+        storageBucket: "techdebate-31985.firebasestorage.app",
+        messagingSenderId: "942974738999",
+        appId: "1:942974738999:web:994175ac0fd52211ee55b2",
+        measurementId: "G-B12XTQQR39",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // Form handling
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("registerForm");
+        const status = document.getElementById("status");
+        const participateYes = document.getElementById("participateYes");
+        const participateNo = document.getElementById("participateNo");
+        const stanceSelection = document.getElementById("stanceSelection");
+
+        // Show/hide stance selection based on participation choice
+        participateYes.addEventListener("change", function () {
+          if (this.checked) {
+            stanceSelection.style.display = "block";
+          }
+        });
+
+        participateNo.addEventListener("change", function () {
+          if (this.checked) {
+            stanceSelection.style.display = "none";
+            // Reset stance selection
+            document
+              .querySelectorAll('input[name="stance"]')
+              .forEach((input) => {
+                input.checked = false;
+              });
+          }
+        });
+
+        // Form submission
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          // Get form values
+          const name = document.getElementById("name").value.trim();
+          const email = document.getElementById("email").value.trim();
+          const institution = document
+            .getElementById("institution")
+            .value.trim();
+          const participate = document.querySelector(
+            'input[name="participate"]:checked'
+          ).value;
+          const stance = document.querySelector('input[name="stance"]:checked')
+            ? document.querySelector('input[name="stance"]:checked').value
+            : "none";
+
+          // Validate form
+          if (!name || !email || !institution) {
+            status.style.color = "#ff6b6b";
+            status.textContent = "⚠️ Please fill all required fields.";
+            return;
+          }
+
+          // Check if participating but no stance selected
+          if (participate === "yes" && stance === "none") {
+            status.style.color = "#ff6b6b";
+            status.textContent = "⚠️ Please select your debate stance.";
+            return;
+          }
+
+          // Show loading state
+          status.style.color = "#e03c3c";
+          status.textContent = "Submitting...";
+
+          // Disable submit button to prevent multiple submissions
+          const submitButton = form.querySelector('button[type="submit"]');
+          submitButton.disabled = true;
+
+          try {
+            // Add data to Firestore
+            await addDoc(collection(db, "registrations"), {
+              name: name,
+              email: email,
+              institution: institution,
+              participate: participate,
+              stance: stance,
+              timestamp: serverTimestamp(),
+            });
+
+            // Success message
+            status.style.color = "#4CAF50";
+            status.textContent = "🎉 Registration successful!";
+
+            // Reset form
+            form.reset();
+            stanceSelection.style.display = "none";
+
+            // Re-enable submit button after a delay
+            setTimeout(() => {
+              submitButton.disabled = false;
+            }, 3000);
+          } catch (error) {
+            console.error("Error adding document: ", error);
+            status.style.color = "#ff6b6b";
+            status.textContent = "❌ Error submitting form. Please try again.";
+
+            // Re-enable submit button
+            submitButton.disabled = false;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

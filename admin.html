@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tech Debate Admin Portal</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Montserrat", sans-serif;
+      }
+
+      body {
+        background: #0a0a14;
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        text-align: center;
+        padding: 2rem 1rem;
+        background: linear-gradient(135deg, #0a0a14 30%, #1a1a2e 80%);
+        border-bottom: 2px solid #e03c3c;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: #e03c3c;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        opacity: 0.85;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        flex: 1;
+      }
+
+      .auth-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 60vh;
+      }
+
+      .auth-form {
+        background: #121621;
+        border-radius: 14px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 30px rgba(224, 60, 60, 0.7);
+        width: 100%;
+        max-width: 450px;
+      }
+
+      .auth-form h2 {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #e03c3c;
+        margin-bottom: 1.8rem;
+        text-align: center;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 14px 18px;
+        border-radius: 8px;
+        border: none;
+        font-size: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        outline-offset: 3px;
+        transition: background 0.3s ease;
+      }
+
+      .form-group input:focus {
+        background: rgba(255, 255, 255, 0.22);
+      }
+
+      .btn {
+        background: #e03c3c;
+        color: #fff;
+        border: none;
+        font-weight: 700;
+        font-size: 1.15rem;
+        border-radius: 30px;
+        padding: 14px 0;
+        cursor: pointer;
+        width: 100%;
+        box-shadow: 0 8px 24px rgba(224, 60, 60, 0.7);
+        transition: all 0.3s ease;
+      }
+
+      .btn:hover {
+        background: #bf2f2f;
+        transform: scale(1.05);
+        box-shadow: 0 12px 32px rgba(191, 47, 47, 0.85);
+      }
+
+      .auth-switch {
+        text-align: center;
+        margin-top: 1.5rem;
+      }
+
+      .auth-switch a {
+        color: #e03c3c;
+        text-decoration: none;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .auth-switch a:hover {
+        text-decoration: underline;
+      }
+
+      #status {
+        margin-top: 1rem;
+        font-weight: 700;
+        font-size: 1rem;
+        color: #ff4b4b;
+        min-height: 1.4em;
+        text-align: center;
+      }
+
+      .dashboard {
+        display: none;
+      }
+
+      .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e03c3c;
+      }
+
+      .dashboard-header h2 {
+        font-size: 2rem;
+        color: #e03c3c;
+      }
+
+      .logout-btn {
+        background: transparent;
+        border: 2px solid #e03c3c;
+        color: #e03c3c;
+        padding: 0.5rem 1.5rem;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .logout-btn:hover {
+        background: #e03c3c;
+        color: #fff;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: #121621;
+        border-radius: 14px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(224, 60, 60, 0.5);
+      }
+
+      .stat-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: #e03c3c;
+      }
+
+      .stat-card .number {
+        font-size: 2.5rem;
+        font-weight: 900;
+      }
+
+      .registrations-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        background: #121621;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(224, 60, 60, 0.5);
+      }
+
+      .registrations-table th,
+      .registrations-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .registrations-table th {
+        background: rgba(224, 60, 60, 0.2);
+        font-weight: 700;
+      }
+
+      .registrations-table tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .table-container {
+        overflow-x: auto;
+      }
+
+      @media (max-width: 768px) {
+        .auth-form {
+          padding: 2rem 1.5rem;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .registrations-table {
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Tech Debate Admin Portal</h1>
+      <p>Manage registrations and view analytics</p>
+    </div>
+
+    <div class="container">
+      <div class="auth-container" id="authContainer">
+        <div class="auth-form" id="loginForm">
+          <h2>Admin Login</h2>
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input
+              type="email"
+              id="loginEmail"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          <button class="btn" id="loginBtn">Login</button>
+          <div class="auth-switch">
+            Don't have an account? <a id="switchToSignup">Sign up</a>
+          </div>
+          <div id="loginStatus"></div>
+        </div>
+
+        <div class="auth-form" id="signupForm" style="display: none">
+          <h2>Admin Sign Up</h2>
+          <div class="form-group">
+            <label for="signupEmail">Email</label>
+            <input
+              type="email"
+              id="signupEmail"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="signupPassword">Password</label>
+            <input
+              type="password"
+              id="signupPassword"
+              placeholder="Create a password"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="adminCode">Admin Code</label>
+            <input
+              type="password"
+              id="adminCode"
+              placeholder="Enter admin access code"
+              required
+            />
+          </div>
+          <button class="btn" id="signupBtn">Sign Up</button>
+          <div class="auth-switch">
+            Already have an account? <a id="switchToLogin">Login</a>
+          </div>
+          <div id="signupStatus"></div>
+        </div>
+      </div>
+
+      <div class="dashboard" id="dashboard">
+        <div class="dashboard-header">
+          <h2>Registration Dashboard</h2>
+          <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h3>Total Registrations</h3>
+            <div class="number" id="totalRegistrations">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Participants</h3>
+            <div class="number" id="participantsCount">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Spectators</h3>
+            <div class="number" id="spectatorsCount">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>For the Notion</h3>
+            <div class="number" id="forNotionCount">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Against the Notion</h3>
+            <div class="number" id="againstNotionCount">0</div>
+          </div>
+        </div>
+
+        <h3>All Registrations</h3>
+        <div class="table-container">
+          <table class="registrations-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Institution</th>
+                <th>Participation</th>
+                <th>Stance</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="registrationsTableBody">
+              <!-- Data will be populated here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase App (core SDK) -->
+    <script type="module">
+      // Import the functions you need from the SDKs
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        getDocs,
+        serverTimestamp,
+        query,
+        where,
+        onSnapshot,
+      } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+        signInWithEmailAndPassword,
+        signOut,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBIVdex7PLmKVu3DMGm39IsdeCVhqBfpmw",
+        authDomain: "techdebate-31985.firebaseapp.com",
+        projectId: "techdebate-31985",
+        storageBucket: "techdebate-31985.firebasestorage.app",
+        messagingSenderId: "942974738999",
+        appId: "1:942974738999:web:994175ac0fd52211ee55b2",
+        measurementId: "G-B12XTQQR39",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+
+      // DOM elements
+      const loginForm = document.getElementById("loginForm");
+      const signupForm = document.getElementById("signupForm");
+      const authContainer = document.getElementById("authContainer");
+      const dashboard = document.getElementById("dashboard");
+      const loginBtn = document.getElementById("loginBtn");
+      const signupBtn = document.getElementById("signupBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const switchToSignup = document.getElementById("switchToSignup");
+      const switchToLogin = document.getElementById("switchToLogin");
+      const loginStatus = document.getElementById("loginStatus");
+      const signupStatus = document.getElementById("signupStatus");
+
+      // Admin code (in a real app, this would be securely stored and validated)
+      const ADMIN_CODE = "techdebate2025";
+
+      // Switch between login and signup forms
+      switchToSignup.addEventListener("click", () => {
+        loginForm.style.display = "none";
+        signupForm.style.display = "block";
+      });
+
+      switchToLogin.addEventListener("click", () => {
+        signupForm.style.display = "none";
+        loginForm.style.display = "block";
+      });
+
+      // Sign up function
+      signupBtn.addEventListener("click", async () => {
+        const email = document.getElementById("signupEmail").value;
+        const password = document.getElementById("signupPassword").value;
+        const adminCode = document.getElementById("adminCode").value;
+
+        if (!email || !password || !adminCode) {
+          signupStatus.textContent = "Please fill all fields";
+          signupStatus.style.color = "#ff6b6b";
+          return;
+        }
+
+        if (adminCode !== ADMIN_CODE) {
+          signupStatus.textContent = "Invalid admin code";
+          signupStatus.style.color = "#ff6b6b";
+          return;
+        }
+
+        try {
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+          signupStatus.textContent = "Account created successfully!";
+          signupStatus.style.color = "#4CAF50";
+
+          // Switch to login form after successful signup
+          setTimeout(() => {
+            signupForm.style.display = "none";
+            loginForm.style.display = "block";
+            document.getElementById("signupEmail").value = "";
+            document.getElementById("signupPassword").value = "";
+            document.getElementById("adminCode").value = "";
+            signupStatus.textContent = "";
+          }, 1500);
+        } catch (error) {
+          console.error("Error creating account:", error);
+          signupStatus.textContent = `Error: ${error.message}`;
+          signupStatus.style.color = "#ff6b6b";
+        }
+      });
+
+      // Login function
+      loginBtn.addEventListener("click", async () => {
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
+
+        if (!email || !password) {
+          loginStatus.textContent = "Please fill all fields";
+          loginStatus.style.color = "#ff6b6b";
+          return;
+        }
+
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+          // The onAuthStateChanged listener will handle the UI update
+        } catch (error) {
+          console.error("Error signing in:", error);
+          loginStatus.textContent = `Error: ${error.message}`;
+          loginStatus.style.color = "#ff6b6b";
+        }
+      });
+
+      // Logout function
+      logoutBtn.addEventListener("click", async () => {
+        try {
+          await signOut(auth);
+        } catch (error) {
+          console.error("Error signing out:", error);
+        }
+      });
+
+      // Auth state observer
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // User is signed in
+          authContainer.style.display = "none";
+          dashboard.style.display = "block";
+          loadRegistrations();
+        } else {
+          // User is signed out
+          authContainer.style.display = "flex";
+          dashboard.style.display = "none";
+        }
+      });
+
+      // Load registrations from Firestore
+      async function loadRegistrations() {
+        try {
+          const querySnapshot = await getDocs(collection(db, "registrations"));
+          const registrations = [];
+          let participants = 0;
+          let spectators = 0;
+          let forNotion = 0;
+          let againstNotion = 0;
+
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            registrations.push(data);
+
+            if (data.participate === "yes") {
+              participants++;
+              if (data.stance === "for") forNotion++;
+              if (data.stance === "against") againstNotion++;
+            } else {
+              spectators++;
+            }
+          });
+
+          // Update stats
+          document.getElementById("totalRegistrations").textContent =
+            registrations.length;
+          document.getElementById("participantsCount").textContent =
+            participants;
+          document.getElementById("spectatorsCount").textContent = spectators;
+          document.getElementById("forNotionCount").textContent = forNotion;
+          document.getElementById("againstNotionCount").textContent =
+            againstNotion;
+
+          // Update table
+          const tableBody = document.getElementById("registrationsTableBody");
+          tableBody.innerHTML = "";
+
+          registrations.forEach((reg) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                        <td>${reg.name || "N/A"}</td>
+                        <td>${reg.email || "N/A"}</td>
+                        <td>${reg.institution || "N/A"}</td>
+                        <td>${
+                          reg.participate === "yes"
+                            ? "Participant"
+                            : "Spectator"
+                        }</td>
+                        <td>${
+                          reg.stance === "for"
+                            ? "For"
+                            : reg.stance === "against"
+                            ? "Against"
+                            : "N/A"
+                        }</td>
+                        <td>${
+                          reg.timestamp
+                            ? new Date(
+                                reg.timestamp.toDate()
+                              ).toLocaleDateString()
+                            : "N/A"
+                        }</td>
+                    `;
+            tableBody.appendChild(row);
+          });
+        } catch (error) {
+          console.error("Error loading registrations:", error);
+        }
+      }
+
+      // Set up real-time listener for registrations
+      function setupRealtimeListener() {
+        const q = collection(db, "registrations");
+        onSnapshot(q, (snapshot) => {
+          loadRegistrations();
+        });
+      }
+
+      // Initialize real-time listener when user is authenticated
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setupRealtimeListener();
+        }
+      });
+    </script>
+  </body>
+</html>
