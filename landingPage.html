@@ -11,6 +11,28 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap"
       rel="stylesheet"
     />
+    <style>
+      .footer-dark {
+        background-color: #0a0a14;
+        padding: 1rem 0;
+        text-align: center;
+      }
+
+      .copyright-dark {
+        color: #ffffff;
+        font-size: 0.95rem;
+        font-family: "Roboto", sans-serif;
+        margin: 0;
+        opacity: 0.8;
+        font-weight: 300;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+    </style>
 
     <style>
       /* Reset */
@@ -625,4 +647,16 @@
       });
     </script>
   </body>
+  <footer class="footer-dark">
+    <div class="container">
+      <p id="copyright-info" class="copyright-dark"></p>
+    </div>
+  </footer>
+
+  <script>
+    const currentYear = new Date().getFullYear();
+    document.getElementById(
+      "copyright-info"
+    ).innerHTML = `&copy; ${currentYear} Sabelo Ndlovu. All Rights Reserved.`;
+  </script>
 </html>
